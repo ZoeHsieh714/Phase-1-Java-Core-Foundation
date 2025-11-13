@@ -17,6 +17,7 @@ public class Product {
         }
 
         //Steam API 會用到這些getters，非常重要***　Steam APIが利用するgetters,とても重要
+        public Long getId() {return id;}
         public String getName(){return name;};
         public String getCategory(){return category;}
         public double getPrice(){return price;}

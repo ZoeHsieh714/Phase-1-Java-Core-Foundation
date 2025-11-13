@@ -63,7 +63,7 @@ public class ProductService {
      }
 
      /**
-     * 練習4: 查找與Optional(findFirst)  サーチ＆Optional(findFirst)
+     * 練習4: 查找與Optional(findFirst)  検索＆Optional(findFirst)
      * 需求:找出"任一個"價格高於50000元的商品(轉成DTO)   任意一つ価格が50000円以上の商品を探す（DTOに変換）
      */
      public Optional<ProductDto> findAnyExpensiveProduct() {
@@ -113,6 +113,69 @@ public class ProductService {
                 //.sum()是DoubleStream才有的專屬方法,直接回傳總和(double),
                 // 無collect方法,有sum(),average(),max(),min()等高效數學運算方法
                 .sum();
+    }
+
+    /**
+     * 【Optional 練習 1: findById 與 orElseThrow】
+     * 需求：根據 ID 查找商品，如果找不到，就拋出一個自定義的業務異常 (Business Exception)  IDをキーに商品を検索し、見つからない場合は業務異常を返す(Business Exception)　　
+     * 這是 Spring Boot 服務中查找單一資源最常見的模式
+     */
+    public ProductDto findProductByIdOrThrow(Long id) {
+        //1.模擬JpaRepository.findById(id)的行為
+        Optional<Product> optionalProduct = mockDatabase.stream()
+                .filter(product -> product.getId().equals(id))
+                .findFirst();
+
+        //2.正確處理Optional-orElseThrow()
+        //如果optionalProduct是空的，則拋出一個RuntimeException(自定義的業務異常)
+        Product product = optionalProduct.orElseThrow(
+                () -> new NoSuchElementException("找不到 ID 為 " + id + " 的商品"));
+
+        //3.轉換為 DTO
+        return new ProductDto(product);
+    }
+
+
+    /**
+     * 【Optional 練習 2: map, orElse & orElseGet】
+     * 需求：查找一個名稱包含關鍵字的商品，如果找不到，則回傳一個 "預設" 的 DTO  商品名称がキーワードに含む商品を検索、見つからない場合はデフォルトに設定したDTOを返す
+     * 這是當業務允許回傳預設值時的用法
+     */
+    public ProductDto findProductByNameOrDefault(String keyword) {
+
+        //1.查找名稱包含關鍵字的商品(回傳Optional<Product>)
+        Optional<Product> optionalProduct = mockDatabase.stream()
+                .filter(product -> product.getName().toLowerCase().contains(keyword.toLowerCase()))
+                .findFirst();
+
+        //2.正確處理Optional-map()
+        //如果Optional裡有Product，則將其映射(map)成ProductDto
+        Optional<ProductDto> optionalDto = optionalProduct.map(ProductDto::new);
+
+        //3.正確處理Optional-orElseGet()
+        //如果optionalDto是空的，則透過Supplier產生一個預設值。
+        //注意：使用orElseGet 而不是orElse，因為orElseGet只有在值不存在時才會執行Supplier內部的方法。
+        return optionalDto.orElseGet(
+                () -> new ProductDto(new Product(0L, "預設商品", "未知", 0.0, 0)));
+    }
+
+    /**
+     * 【Optional 練習 3: ifPresent - 執行副作用 (Side Effect)】
+     * 需求：查找一個商品，如果它存在，就執行一個動作 (例如記錄 Log 或更新快取)。  商品を検索して、ありましたらアクションをする(Logを記入かキャッシュを更新)
+     * 注意：這個方法沒有回傳值 (void)。　　リターン値はなし
+     */
+    public void logProductStatus(Long id) {
+        Optional<Product> optionalProduct = mockDatabase.stream()
+                .filter(product -> product.getId().equals(id))
+                .findFirst();
+
+        //正確處理Optional-ifPresent()
+        //如果Optional裡有值，則執行括號內的Consumer邏輯。
+        optionalProduct.ifPresent(product -> {
+            System.out.println("LOG: 找到商品 - 名稱: " + product.getName() + ", 庫存: " + product.getStock());
+            //實務上可以在這裡執行：cacheService.put(product.getId(), product);
+        });
+        //如果找不到，什麼也不做。程式碼非常簡潔。
     }
 
 
