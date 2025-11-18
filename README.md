@@ -1,4 +1,4 @@
-# Phase-1-Java-Core-Foundation: Java核心基礎與Spring底層原理實戰
+## Phase-1-Java-Core-Foundation: Java核心基礎與Spring底層原理實戰
 ## (Phase-1-Java-Core-Foundation: Javaコア基礎とSpring基盤原則の実践)
 
 這個專案標誌著 Spring Boot 學習的第一階段完成，它是一個完全整合的實戰範例，涵蓋了 Java 8+ 的核心特性、分層架構，以及 Spring IoC 容器運作的底層原理（反射與生命週期）。
@@ -15,9 +15,9 @@
 
 | 模組 (モジュール) | 核心知識點 (コア知識点) | 實作檔案與方法 (実装ファイルとメソッド) |
 | :--- | :--- | :--- |
-| **Stream API** | **數據高效處理:** `map`, `filter`, `collect` 等鏈式呼叫，用於資料轉換與聚合。（データ高効率処理: チェイン呼び出し） | `service/ProductService.java` (Ex 1, 2, 5, 6) |
-| **Optional** | **徹底迴避 Null:** `orElseThrow`、`orElseGet`、`map` 等方法，用於單一資源查找和錯誤預防。（Null回避の徹底: エラー予防） | `service/ProductService.java` (Ex 4: `findProductByIdOrThrow`) |
-| **分層架構** | Entity 到 DTO 的乾淨數據轉換處理。（Entity から DTO へのクリーンなデータ変換処理。） | `controller/ProductRestController.java` |
+| **Stream API** | **數據高效處理:** `map`, `filter`, `collect` 等鏈式呼叫，用於資料轉換與聚合。（データ高効率処理: チェイン呼び出し） | `service:ProductService.java` (Ex 1, 2, 5, 6) |
+| **Optional** | **徹底迴避 Null:** `orElseThrow`、`orElseGet`、`map` 等方法，用於單一資源查找和錯誤預防。（Null回避の徹底: エラー予防） | `service:ProductService.java` (Ex 4: `findProductByIdOrThrow`) |
+| **分層架構** | Entity 到 DTO 的乾淨數據轉換處理。（Entity から DTO へのクリーンなデータ変換処理。） | `controller:ProductRestController.java` |
 
 ### 2. 核心原理與生命週期 (コア原則とライフサイクル)
 
@@ -26,14 +26,14 @@
 
 | 模組 (モジュール) | 核心知識點 (コア知識点) | 實作檔案與方法 (実装ファイルとメソッド) |
 | :--- | :--- | :--- |
-| **反射與註解** | **IoC 容器原理模擬:** 透過反射 (`newInstance()`) 讀取註解，實現元件掃描與實例化。(反射 (newInstance()) を通じてアノテーションを読み取り、コンポーネントのスキャンとインスタンス化を実現します。) | `ioc/SimpleIocContainer.java` (`runSimulation`) |
-| **Bean 生命週期** | **初始化與銷毀順序:** 證明 `Constructor` -> `@PostConstruct` -> `@PreDestroy` 的嚴格執行順序。(Constructor -> @PostConstruct -> @PreDestroy の厳格な実行順序を証明します。) | `service/LifecycleDemoBean.java` |
+| **反射與註解** | **IoC 容器原理模擬:** 透過反射 (`newInstance()`) 讀取註解，實現元件掃描與實例化。(反射 (newInstance()) を通じてアノテーションを読み取り、コンポーネントのスキャンとインスタンス化を実現します。) | `ioc:SimpleIocContainer.java` (`runSimulation`) |
+| **Bean 生命週期** | **初始化與銷毀順序:** 證明 `Constructor` -> `@PostConstruct` -> `@PreDestroy` 的嚴格執行順序。(Constructor -> @PostConstruct -> @PreDestroy の厳格な実行順序を証明します。) | `service:LifecycleDemoBean.java` |
 
 ### 3. 網頁整合 (ウェブ統合)
 
 | 項目 (項目) | 詳細說明 (詳細説明) | 相關檔案 (関連ファイル) |
 | :--- | :--- | :--- |
-| **View Controller** | 使用 `@Controller` 處理請求，並回傳 Thymeleaf 視圖名稱。（`@Controller` を使用し、Thymeleaf のビュー名を返却する。） | `controller/ProductWebController.java` |
+| **View Controller** | 使用 `@Controller` 處理請求，並回傳 Thymeleaf 視圖名稱。（`@Controller` を使用し、Thymeleaf のビュー名を返却する。） | `controller:ProductWebController.java` |
 | **Thymeleaf 處理** | 使用 `th:each` 和 `th:text` 有效率地描繪 Stream API 的處理結果。（`th:each` や `th:text` で Stream API の結果を効率的に描画する。） | `src/main/resources/templates/products.html` |
 
 ---
